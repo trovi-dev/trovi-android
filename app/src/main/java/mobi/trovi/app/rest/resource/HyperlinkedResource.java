@@ -12,4 +12,8 @@ public abstract class HyperlinkedResource {
     public HyperlinkedResource(String url) throws MalformedURLException {
         this.url = new URL(url);
     }
+
+    public URL getUrl() {
+        return url;
+    }
 }

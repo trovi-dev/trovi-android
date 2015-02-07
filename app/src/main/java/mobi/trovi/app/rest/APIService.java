@@ -18,4 +18,6 @@ public interface APIService {
 
     @POST("api/users")
     Observable<User> createUser();
+
+    @GET("api/locations?")
 }
