@@ -24,7 +24,7 @@ import com.andtinder.model.CardModel;
 import com.andtinder.model.Orientations;
 import com.andtinder.view.CardContainer;
 import com.andtinder.view.SimpleCardStackAdapter;
-import mobi.trovi.app.rest.User;
+import mobi.trovi.app.rest.resource.User;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

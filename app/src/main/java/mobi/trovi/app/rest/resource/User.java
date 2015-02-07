@@ -1,5 +1,4 @@
-package mobi.trovi.app.rest;
-import android.graphics.drawable.Drawable;
+package mobi.trovi.app.rest.resource;
 
 import java.net.MalformedURLException;
 import java.net.URL;

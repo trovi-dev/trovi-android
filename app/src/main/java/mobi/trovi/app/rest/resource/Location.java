@@ -1,4 +1,4 @@
-package mobi.trovi.app.rest;
+package mobi.trovi.app.rest.resource;
 
 import java.net.MalformedURLException;
 import java.net.URL;
