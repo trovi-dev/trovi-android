@@ -14,7 +14,7 @@ import java.io.IOException;
  * Created by aidan on 2/7/15.
  */
 public class UserLocation {
-/**
+    /**
  private float latitude;
  private float longitude;
  private String countryName;
@@ -30,15 +30,8 @@ public class UserLocation {
     private String locality;
     private String postalCode;
 
-
-    public void fillLatLon(Context context){
-        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        this.longitude = location.getLongitude();
-        this.latitude = location.getLatitude();
-    }
-
     public void fillLocation(Context context){
+        fillLatLon(context);
         this.geocoder = new Geocoder(context);
         try {
             this.address = geocoder.getFromLocation(this.latitude, this.longitude, 1).get(0);
@@ -48,5 +41,36 @@ public class UserLocation {
             e.printStackTrace();
             Log.e("LOCATION","ERROR WHILE GETTING ADDRESS FROM GEOCODER");
         }
+    }
+
+    private void fillLatLon(Context context){
+        LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        this.longitude = location.getLongitude();
+        this.latitude = location.getLatitude();
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public Geocoder getGeocoder() {
+        return geocoder;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public String getLocality() {
+        return locality;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
     }
 }
