@@ -1,5 +1,7 @@
 package mobi.trovi.app.rest.resource;
 
+import com.andtinder.model.CardModel;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -9,6 +11,7 @@ import java.net.URL;
 public class User extends HyperlinkedResource {
     private String firstName;
     private URL profilePicture;
+    private int age;
 
     public User(String url, String firstName, String profilePicture) throws MalformedURLException{
         super(url);
@@ -30,5 +33,9 @@ public class User extends HyperlinkedResource {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public int getAge() {
+        return age;
     }
 }
