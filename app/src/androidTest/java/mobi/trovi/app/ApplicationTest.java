@@ -1,4 +1,4 @@
-package mobi.trovi.trovi.app;
+package mobi.trovi.app;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

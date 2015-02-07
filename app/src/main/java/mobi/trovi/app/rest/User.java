@@ -1,21 +1,28 @@
 package mobi.trovi.app.rest;
 import android.graphics.drawable.Drawable;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * Created by aidan on 2/7/15.
  */
-public class User {
+public class User extends HyperlinkedResource {
     private String firstName;
-    private String lastName;
-    private int phoneNumber;
-    private Drawable picture;
+    private URL profilePicture;
 
-    public Drawable getPicture() {
-        return picture;
+    public User(String url, String firstName, String profilePicture) throws MalformedURLException{
+        super(url);
+        this.firstName = firstName;
+        this.profilePicture = new URL(profilePicture);
     }
 
-    public void setPicture(Drawable picture) {
-        this.picture = picture;
+    public URL getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) throws MalformedURLException {
+        this.profilePicture = new URL(profilePicture);
     }
 
     public String getFirstName() {
@@ -25,22 +32,4 @@ public class User {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public int getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-
 }
