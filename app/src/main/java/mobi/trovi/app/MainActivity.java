@@ -29,7 +29,12 @@ import com.andtinder.model.CardModel;
 import com.andtinder.model.Orientations;
 import com.andtinder.view.CardContainer;
 import com.andtinder.view.SimpleCardStackAdapter;
+
+import mobi.trovi.app.UI.UserLocation;
 import mobi.trovi.app.rest.resource.User;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,8 +47,13 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Need to update geolocation in background??
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_screen);
+
+        UserLocation location = new UserLocation();
+    setContentView(R.layout.activity_home_screen);
         boolean isUserInitialized = isFirstRun();
 
         //User user = new User();

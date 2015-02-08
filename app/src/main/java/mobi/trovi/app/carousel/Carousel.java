@@ -5,7 +5,6 @@ import java.util.List;
 
 import mobi.trovi.app.rest.resource.User;
 
-
 public class Carousel {
 
     private List<User> carousel;
