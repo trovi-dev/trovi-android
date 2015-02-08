@@ -34,7 +34,9 @@ import com.andtinder.view.SimpleCardStackAdapter;
 
 import mobi.trovi.app.UI.UserLocation;
 import mobi.trovi.app.carousel.Carousel;
+import mobi.trovi.app.rest.APIService;
 import mobi.trovi.app.rest.resource.User;
+import retrofit.RestAdapter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -78,9 +80,21 @@ public class MainActivity extends ActionBarActivity {
             initializeUser();
         }
         //user is initialized. Load their details into User object
+
+        sendUserInformation();
         //TODO: load their details into the User object
     }
 
+    private void sendUserInformation() {
+
+        SharedPreferences preferences = getPreferences(Context.MODE_PRIVATE);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://trovi.herokuapp.com/api/")
+                .build();
+        APIService service = restAdapter.create(APIService.class);
+
+    }
     /**
      * gets phone number, first/last name, and picture.
      * Persists them into the sharedPreferences
@@ -119,7 +133,7 @@ public class MainActivity extends ActionBarActivity {
             }
         }, "First Name");
 
-        getFirstPicture();
+        // getFirstPicture();
         editor.putString("profilePictureFilename", "profile_picture");
 
         editor.apply();//apply is better than commit. apply backgrounds the write.
