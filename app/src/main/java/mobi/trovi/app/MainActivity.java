@@ -51,8 +51,6 @@ public class MainActivity extends ActionBarActivity {
         }
         //user is initialized. Load their details into User object
         //TODO: load their details into the User object
-
-        initCards();
     }
 
     /**
@@ -77,7 +75,6 @@ public class MainActivity extends ActionBarActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("lastName", value);
                 editor.apply();
-                loadSettingsDirectlyToCard();
             }
         }, "Last Name");
 
@@ -181,22 +178,6 @@ public class MainActivity extends ActionBarActivity {
         }//end of selecting bottom image
     }
 
-    private void loadSettingsDirectlyToCard(){
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-        String firstName = sharedPreferences.getString("firstName", "John");
-        String lastName = sharedPreferences.getString("lastName", "Smith");
-        String profilePictureFile = sharedPreferences.getString("profilePicture","");
-        try {
-            Drawable d = Drawable.createFromPath(profilePictureFile);
-            GridLayout myBackground = (GridLayout) findViewById(R.id.background);
-            myBackground.setBackground(d);
-            initCards(new CardModel(firstName, lastName, d));
-
-        } catch(Exception e){
-            e.printStackTrace(); Log.e("ERR","ERROR WHILE LOADING IMAGE");
-        }
-
-    }
 
     /**
      * checks if it's the first run,
@@ -207,16 +188,6 @@ public class MainActivity extends ActionBarActivity {
         return sharedPref.getBoolean("isFirstRun", false);
     }
 
-    /**
-     * sets up the andTinder cards with the given varargs of cardModels stuff.
-     */
-    private void initCards(CardModel... cardModels){
-        CardContainer mCardContainer = (CardContainer) findViewById(R.id.layoutview);
-        mCardContainer.setOrientation(Orientations.Orientation.Disordered);
-        SimpleCardStackAdapter adapter = new SimpleCardStackAdapter(this);
-        for(CardModel c: cardModels) adapter.add(c);
-        mCardContainer.setAdapter(adapter);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
