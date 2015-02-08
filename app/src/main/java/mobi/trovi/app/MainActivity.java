@@ -50,9 +50,10 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
 
     private Carousel carousel;
+    public static int index = 0;
+    public static List<Drawable> pictures;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
 
         // Need to update geolocation in background??
 
@@ -64,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 
         //User user = new User();
 
-        if(!isUserInitialized){
+        if (!isUserInitialized) {
             //user isn't initialized. Make a profile
             initializeUser();
         }
@@ -73,6 +74,9 @@ public class MainActivity extends ActionBarActivity {
         sendUserInformation();
         //TODO: load their details into the User object
 
+        pictures = new ArrayList<Drawable>(2);
+        pictures.add(getDrawable(R.drawable.sample_profile_picture));
+        pictures.add(getDrawable(R.drawable.mj));
         ImageView rightArrow = (ImageView) findViewById(R.id.rarrowview);
         ImageView leftArrow = (ImageView) findViewById(R.id.larrowview);
 
@@ -80,11 +84,28 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 ImageView picture = (ImageView) findViewById(R.id.imageView);
-                picture.setBackground(getDrawable(R.drawable.mj));
+                if (index == pictures.size() - 1)
+                    index = 0;
+                else
+                    index++;
+                picture.setBackground(pictures.get(index));
             }
         };
 
         rightArrow.setOnClickListener(onClickRight);
+
+        View.OnClickListener onClickLeft = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView picture = (ImageView) findViewById(R.id.imageView);
+                if (index == 0)
+                    index = pictures.size() - 1;
+                else
+                    index--;
+                picture.setBackground(pictures.get(index));
+            }
+        };
+        leftArrow.setOnClickListener(onClickLeft);
     }
 
     private void sendUserInformation() {
@@ -111,7 +132,7 @@ public class MainActivity extends ActionBarActivity {
         editor.putString("phoneNumber", mPhoneNumber);
 
         //async callbacks are hella ugly.
-        promptForResult(new PromptRunnable(){
+        promptForResult(new PromptRunnable() {
             // put whatever code you want to run after user enters a result
             public void run() {
                 // get the value we stored from the dialog
@@ -224,7 +245,6 @@ public class MainActivity extends ActionBarActivity {
         }//end of selecting bottom image
     }
 
-
     /**
      * checks if it's the first run,
      * returns false by default (preference isn't found)
@@ -233,7 +253,6 @@ public class MainActivity extends ActionBarActivity {
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         return sharedPref.getBoolean("isFirstRun", false);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
