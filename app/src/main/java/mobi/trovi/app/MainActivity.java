@@ -58,17 +58,6 @@ public class MainActivity extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
 
-        ImageView rightArrow = (ImageView) findViewById(R.id.rarrowview);
-        ImageView leftArrow = (ImageView) findViewById(R.id.larrowview);
-        ImageView picture = (ImageView) findViewById(R.id.imageView);
-
-        View.OnClickListener onClickRight = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        };
-
         UserLocation location = new UserLocation();
         setContentView(R.layout.activity_home_screen);
         boolean isUserInitialized = isFirstRun();
@@ -83,6 +72,19 @@ public class MainActivity extends ActionBarActivity {
 
         sendUserInformation();
         //TODO: load their details into the User object
+
+        ImageView rightArrow = (ImageView) findViewById(R.id.rarrowview);
+        ImageView leftArrow = (ImageView) findViewById(R.id.larrowview);
+
+        View.OnClickListener onClickRight = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageView picture = (ImageView) findViewById(R.id.imageView);
+                picture.setBackground(getDrawable(R.drawable.mj));
+            }
+        };
+
+        rightArrow.setOnClickListener(onClickRight);
     }
 
     private void sendUserInformation() {
@@ -93,6 +95,8 @@ public class MainActivity extends ActionBarActivity {
                 .setEndpoint("http://trovi.herokuapp.com/api/")
                 .build();
         APIService service = restAdapter.create(APIService.class);
+
+        service.createUser();
 
     }
     /**
