@@ -15,20 +15,25 @@ public class Carousel {
         carousel = new ArrayList<User>(users);
     }
 
-    private User circleRight() {
+
+    public User getCurrentUser() {
+        return carousel.get(carouselIndex);
+    }
+
+    public User circleRight() {
         if (carouselIndex == (carousel.size() - 1))
             carouselIndex = 0;
         else
             carouselIndex++;
-        return carousel.get(carouselIndex);
+        return getCurrentUser();
     }
 
-    private User circleLeft() {
+    public User circleLeft() {
         if (carouselIndex == 0)
             carouselIndex = carousel.size() -1;
         else
             carouselIndex--;
-        return carousel.get(carouselIndex);
+        return getCurrentUser();
     }
 
 }
