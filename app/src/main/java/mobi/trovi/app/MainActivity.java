@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -18,11 +19,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Switch;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import mobi.trovi.app.carousel.Carousel;
+import mobi.trovi.app.rest.resource.User;
+
 public class MainActivity extends ActionBarActivity {
 
+    Carousel carousel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +45,8 @@ public class MainActivity extends ActionBarActivity {
         }
         //user is initialized. Load their details into User object
         //TODO: load their details into the User object
+        //        Switch publishSwitch = (Switch) findViewById(R.id.publishSwitch);
+        //        publishSwitch.setChecked(isPublishing);
     }
 
     /**
@@ -79,7 +90,7 @@ public class MainActivity extends ActionBarActivity {
 
         getFirstPicture();
         editor.putString("profilePictureFilename", "profile_picture");
-
+        editor.putBoolean("isPublishing", false);
         editor.apply();//apply is better than commit. apply backgrounds the write.
     }
 
@@ -164,7 +175,6 @@ public class MainActivity extends ActionBarActivity {
         }//end of selecting bottom image
     }
 
-
     /**
      * checks if it's the first run,
      * returns false by default (preference isn't found)
@@ -173,7 +183,6 @@ public class MainActivity extends ActionBarActivity {
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         return sharedPref.getBoolean("isFirstRun", false);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -196,5 +205,49 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * cycles the currently displayed User to the left
+     */
+    public void carouselLeft(){
+        displayUser(this.carousel.circleLeft());
+    }
+
+    /**
+     * cycles the currently displayed User to the right
+     */
+    public void carouselRight(){
+        displayUser(this.carousel.circleLeft());
+    }
+
+    /**
+     * toggles whether the user is 'publishing'
+     * @return the current isPublishing status
+     */
+    public boolean togglePublish(){
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        boolean isPublishing = sharedPref.getBoolean("isPublishing", false);
+        isPublishing = !isPublishing;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("isPublishing",isPublishing);
+        editor.apply();
+        Switch publishSwitch = (Switch) findViewById(R.id.publishSwitch);
+        publishSwitch.setChecked(isPublishing);
+        return isPublishing;
+    }
+
+    /**
+     * sets the currently displayed user to the given one.
+     * @param userToDisplay  User object to display
+     */
+    public void displayUser(User userToDisplay){
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+        try {
+            imageView.setBackground((Drawable) userToDisplay.getProfilePicture().getContent());
+        } catch (IOException e){
+            e.printStackTrace();
+            Log.e("ERROR","ERROR WHILE RETRIEVING USER PROFILE PICTURE");
+        }
     }
 }
