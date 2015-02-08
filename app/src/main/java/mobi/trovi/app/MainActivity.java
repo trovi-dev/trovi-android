@@ -34,8 +34,29 @@ import mobi.trovi.app.rest.resource.User;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
+
+    private List<User> carousel = new ArrayList<>();
+    private int carouselIndex = 0;
+
+    private User circleRight() {
+        if (carouselIndex == (carousel.size() - 1))
+            carouselIndex = 0;
+        else
+            carouselIndex++;
+        return carousel.get(carouselIndex);
+    }
+
+    private User circleLeft() {
+        if (carouselIndex == 0)
+            carouselIndex = carousel.size() -1;
+        else
+            carouselIndex--;
+        return carousel.get(carouselIndex);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
