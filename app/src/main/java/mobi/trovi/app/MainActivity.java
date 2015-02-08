@@ -22,8 +22,10 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 
 import com.andtinder.model.CardModel;
 import com.andtinder.model.Orientations;
@@ -31,6 +33,7 @@ import com.andtinder.view.CardContainer;
 import com.andtinder.view.SimpleCardStackAdapter;
 
 import mobi.trovi.app.UI.UserLocation;
+import mobi.trovi.app.carousel.Carousel;
 import mobi.trovi.app.rest.resource.User;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -44,16 +47,28 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
-
+    private Carousel carousel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
         // Need to update geolocation in background??
 
         super.onCreate(savedInstanceState);
 
+        ImageView rightArrow = (ImageView) findViewById(R.id.rarrowview);
+        ImageView leftArrow = (ImageView) findViewById(R.id.larrowview);
+        ImageView picture = (ImageView) findViewById(R.id.imageView);
+
+        View.OnClickListener onClickRight = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        };
+
         UserLocation location = new UserLocation();
-    setContentView(R.layout.activity_home_screen);
+        setContentView(R.layout.activity_home_screen);
         boolean isUserInitialized = isFirstRun();
 
         //User user = new User();

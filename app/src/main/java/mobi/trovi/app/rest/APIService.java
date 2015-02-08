@@ -23,4 +23,7 @@ public interface APIService {
 
     @PATCH("api/users/{phone}")
     Observable<User> updateUserField(@Path("phone") String phone);
+
+    @GET("/api/users/list_within_radius")
+    Observable<List<User>> listNearbyUser();
 }
