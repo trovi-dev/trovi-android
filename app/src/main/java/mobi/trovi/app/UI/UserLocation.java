@@ -30,8 +30,8 @@ public class UserLocation {
     private String locality;
     private String postalCode;
 
-    public void fillLocation(Context context){
-        fillLatLon(context);
+    public void updateLocation(Context context){
+        updateLatLon(context);
         this.geocoder = new Geocoder(context);
         try {
             this.address = geocoder.getFromLocation(this.latitude, this.longitude, 1).get(0);
@@ -43,7 +43,7 @@ public class UserLocation {
         }
     }
 
-    private void fillLatLon(Context context){
+    private void updateLatLon(Context context){
         LocationManager lm = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         this.longitude = location.getLongitude();

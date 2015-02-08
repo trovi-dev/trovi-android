@@ -2,7 +2,9 @@ package mobi.trovi.app.rest;
 import mobi.trovi.app.rest.resource.Location;
 import mobi.trovi.app.rest.resource.User;
 import retrofit.http.GET;
+import retrofit.http.PATCH;
 import retrofit.http.POST;
+import retrofit.http.Path;
 import rx.Observable;
 import java.util.List;
 
@@ -18,4 +20,7 @@ public interface APIService {
 
     @POST("api/users")
     Observable<User> createUser();
+
+    @PATCH("api/users/{phone}")
+    Observable<User> updateUserField(@Path("phone") String phone);
 }
