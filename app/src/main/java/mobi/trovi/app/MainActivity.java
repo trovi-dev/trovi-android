@@ -77,6 +77,7 @@ public class MainActivity extends ActionBarActivity {
         pictures = new ArrayList<Drawable>(2);
         pictures.add(getDrawable(R.drawable.sample_profile_picture));
         pictures.add(getDrawable(R.drawable.mj));
+        pictures.add(getDrawable(R.drawable.aidan));
         ImageView rightArrow = (ImageView) findViewById(R.id.rarrowview);
         ImageView leftArrow = (ImageView) findViewById(R.id.larrowview);
 

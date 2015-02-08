@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/trovi-android.iml" filepath="$PROJECT_DIR$/trovi-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/trovi-android-new.iml" filepath="$PROJECT_DIR$/trovi-android-new.iml" />
     </modules>
   </component>
 </project>

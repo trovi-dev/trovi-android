@@ -30,17 +30,18 @@
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Publish"
+                android:text="I&apos;m Available"
                 android:id="@+id/publishSwitch"
                 android:layout_weight="2"
-                android:textColor="#ff0efffa" />
+                android:textColor="#ff000000" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="286dp"
+                android:layout_height="match_parent"
                 android:id="@+id/imageView"
-                android:layout_weight="6"
-                android:background="@drawable/sample_profile_picture" />
+                android:background="@drawable/sample_profile_picture"
+                android:layout_marginLeft="33dp"
+                android:scaleType="center" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -62,7 +63,8 @@
         android:layout_alignParentLeft="false"
         android:layout_alignParentRight="true"
         android:background="@drawable/rarrow"
-        android:clickable="true" />
+        android:clickable="true"
+        android:alpha="127" />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,6 +73,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="false"
         android:background="@drawable/larrow"
-        android:clickable="true" />
+        android:clickable="true"
+        android:alpha="127" />
 
 </RelativeLayout>
