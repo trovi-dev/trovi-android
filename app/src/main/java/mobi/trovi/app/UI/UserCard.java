@@ -19,7 +19,7 @@ public class UserCard {
     public UserCard(User user){
 
         //TODO: get Drawable from User's profilePicture
-        card = new CardModel(user.getFirstName(), ((Integer)user.getAge()).toString(), );
+        //card = new CardModel(user.getFirstName(), ((Integer)user.getAge()).toString(),);
     }
 
     /**

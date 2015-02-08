@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_home_screen);
         boolean isUserInitialized = isFirstRun();
 
-        User user = new User();
+        //User user = new User();
 
         if(!isUserInitialized){
             //user isn't initialized. Make a profile
@@ -156,31 +156,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * sets up the andTinder cards with the sample stuff.
+     * sets up the andTinder cards with the given varargs of cardModels stuff.
      */
-    private void initCards(){
+    private void initCards(CardModel... cardModels){
         CardContainer mCardContainer = (CardContainer) findViewById(R.id.layoutview);
         mCardContainer.setOrientation(Orientations.Orientation.Disordered);
-        CardModel card = new CardModel("Title1", "Description goes here",
-                getResources().getDrawable(R.drawable.picture1));
-        card.setOnClickListener(new CardModel.OnClickListener() {
-            @Override
-            public void OnClickListener() {
-                Log.i("Swipeable Cards", "I am pressing the first card");
-            }
-        });
-        CardModel card2 = new CardModel("Title2", "Description goes here",
-                getResources().getDrawable(R.drawable.picture1));
-        card2.setOnClickListener(new CardModel.OnClickListener() {
-            @Override
-            public void OnClickListener() {
-                Log.i("Swipeable Cards", "I am pressing the second card");
-            }
-        });
-
         SimpleCardStackAdapter adapter = new SimpleCardStackAdapter(this);
-        adapter.add(card);
-        adapter.add(card2);
+        for(CardModel c: cardModels) adapter.add(c);
         mCardContainer.setAdapter(adapter);
     }
 
