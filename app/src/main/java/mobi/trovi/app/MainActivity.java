@@ -11,6 +11,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -19,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.GridLayout;
 
 import com.andtinder.model.CardModel;
 import com.andtinder.model.Orientations;
@@ -26,6 +31,7 @@ import com.andtinder.view.CardContainer;
 import com.andtinder.view.SimpleCardStackAdapter;
 import mobi.trovi.app.rest.resource.User;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -60,11 +66,33 @@ public class MainActivity extends ActionBarActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("phoneNumber", mPhoneNumber);
 
-        String firstName, lastName;
-        firstName = getResponseFromQuery("First Name");
-        editor.putString("firstName", firstName);
-        lastName = getResponseFromQuery("Last Name");
-        editor.putString("lastName", lastName);
+        //async callbacks are hella ugly.
+        promptForResult(new PromptRunnable(){
+            // put whatever code you want to run after user enters a result
+            public void run() {
+                // get the value we stored from the dialog
+                String value = this.getValue();
+                // do something with this value...
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("lastName", value);
+                editor.apply();
+                loadSettingsDirectlyToCard();
+            }
+        }, "Last Name");
+
+        promptForResult(new PromptRunnable(){
+            // put whatever code you want to run after user enters a result
+            public void run() {
+                // get the value we stored from the dialog
+                String value = this.getValue();
+                // do something with this value...
+                SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("firstName", value);
+                editor.apply();
+            }
+        }, "First Name");
 
         getFirstPicture();
         editor.putString("profilePictureFilename", "profile_picture");
@@ -72,78 +100,102 @@ public class MainActivity extends ActionBarActivity {
         editor.apply();//apply is better than commit. apply backgrounds the write.
     }
 
-    /**
-     * TODO: the return value isn't working because of inheritance or something.
-     * Queries the user with 'query' in a popup and returns the response
-     * @param query the query to prompt the user with
-     * @return the String response of the user
-     */
-    private String getResponseFromQuery(final String query){
-        String returnValue;
-
-        final EditText et = new EditText(this);
+    void promptForResult(final PromptRunnable postrun, String message) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        alert.setTitle(query);
-        alert.setMessage(query);
-        // Set an EditText view to get user input
+        alert.setTitle(message);
+        alert.setMessage(message);
+        // Create textbox to put into the dialog
         final EditText input = new EditText(this);
+        // put the textbox into the dialog
         alert.setView(input);
+        // procedure for when the ok button is clicked.
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String value = input.getText().toString();
-                //TODO: Do something with value!
-            }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
+                dialog.dismiss();
+                // set value from the dialog inside our runnable implementation
+                postrun.setValue(value);
+                // ** HERE IS WHERE THE MAGIC HAPPENS! **
+                // now that we have stored the value, lets run our Runnable
+                postrun.run();
+                return;
             }
         });
 
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                return;
+            }
+        });
         alert.show();
-        return null;
+    }
+
+    class PromptRunnable implements Runnable {
+        private String v;
+        void setValue(String inV) {
+            this.v = inV;
+        }
+        String getValue() {
+            return this.v;
+        }
+        public void run() {
+            this.run();
+        }
     }
 
     /**
      * queries the user to pick a profile picture
      * @return the chosen picture as a drawable
      */
-    private Drawable getFirstPicture(){
-        Drawable picture;
-        Intent data = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String picturePath = cursor.getString(columnIndex);
-        cursor.close();
-        Bitmap bump = BitmapFactory.decodeFile(picturePath);
-        picture =  new BitmapDrawable(getResources(), bump);
-        return picture;
-
+    private void getFirstPicture(){
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, 1);
     }
 
-    /**
-     * saves the given drawable to on-device storage
-     * It's stored to "profile_picture" as a PNG
-     * @param picture the Drawable picture to store as profile picture
-     * @return whether the persistence was successful.
-     */
-    private boolean persistPicture(Drawable picture){
-        Bitmap bmpPicture = ((BitmapDrawable)picture).getBitmap();
-        FileOutputStream fos;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            Bitmap bump = BitmapFactory.decodeFile(picturePath);
+            try {
+                // pictures and other media owned by the application, consider
+                // Context.getExternalMediaDir().
+                File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                File file = new File(path, "profilePicture.png");
+                FileOutputStream outputStream = new FileOutputStream(file);
+                bump.compress(Bitmap.CompressFormat.PNG, 9, outputStream);
+                outputStream.close();
+            } catch (IOException e){
+                Log.e("ERROR","ERROR WHILE SAVING INITIAL IMAGE TO PICTURES/PROFILEPICTURE.PNG");
+                e.printStackTrace();
+            }
+
+        }//end of selecting bottom image
+    }
+
+    private void loadSettingsDirectlyToCard(){
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        String firstName = sharedPreferences.getString("firstName", "John");
+        String lastName = sharedPreferences.getString("lastName", "Smith");
+        String profilePictureFile = sharedPreferences.getString("profilePicture","");
         try {
-            String FILENAME = "profile_picture";
-            fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-            bmpPicture.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
-        } catch (IOException e){
-            e.printStackTrace();
-            return false;
+            Drawable d = Drawable.createFromPath(profilePictureFile);
+            GridLayout myBackground = (GridLayout) findViewById(R.id.background);
+            myBackground.setBackground(d);
+            initCards(new CardModel(firstName, lastName, d));
+
+        } catch(Exception e){
+            e.printStackTrace(); Log.e("ERR","ERROR WHILE LOADING IMAGE");
         }
-        return true;
+
     }
 
     /**
